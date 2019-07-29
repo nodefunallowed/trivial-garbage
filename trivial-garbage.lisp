@@ -13,6 +13,7 @@
   (:shadow #:make-hash-table)
   (:nicknames #:tg)
   (:export #:gc
+           #:supports-weak-pointers-p
            #:make-weak-pointer
            #:weak-pointer-value
            #:weak-pointer-p
@@ -100,6 +101,14 @@
 #+(or allegro openmcl lispworks)
 (defstruct (weak-pointer (:constructor %make-weak-pointer))
   #-openmcl pointer)
+
+(defun supports-weak-pointers-p ()
+  "Returns @em{true} if the implementation supports weak pointers and 
+   @code{nil} otherwise."
+  #+(or sbcl cmu scl clisp abcl ecl allegro openmcl corman lispworks clasp)
+  t
+  #-(or sbcl cmu scl clisp abcl ecl allegro openmcl corman lispworks clasp)
+  nil)
 
 (defun make-weak-pointer (object)
   "Creates a new weak pointer which points to @code{object}. For
